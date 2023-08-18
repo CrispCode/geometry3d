@@ -1,0 +1,45 @@
+{
+  "name": "@crispcode/geometry3d",
+  "version": "0.0.1",
+  "description": "A 3D geometry library. Useful for computing 3d shapes and collisions, on both client side and server side.",
+  "author": "Crisp Code ( contact@crispcode.ro )",
+  "keywords": [
+    "geometry",
+    "geometry3d",
+    "server",
+    "library",
+    "architecture",
+    "3d",
+    "mmo",
+    "multiplayer",
+    "collision",
+    "collision detection",
+    "trigonometry",
+    "shapes"
+  ],
+  "access": "public",
+  "engines": {
+    "node": ">=16.15.0",
+    "npm": ">=8.5.5"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrispCode/geometry3d.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CrispCode/geometry3d/issues"
+  },
+  "devDependencies": {
+    "c8": "^8.0.1",
+    "mocha": "^10.2.0",
+    "eslint": "^8.46.0",
+    "documentation": "^14.0.2"
+  },
+  "scripts": {
+    "test": "c8 mocha --recursive",
+    "docs": "rm -rf ./docs && ./node_modules/.bin/documentation build src/index.js -f html -o docs && open ./docs/index.html"
+  },
+  "type": "module",
+  "main": "./src/index.js"
+}
