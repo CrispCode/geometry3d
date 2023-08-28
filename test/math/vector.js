@@ -2,8 +2,8 @@
 
 import assert from 'assert'
 import approx from './../../src/utils/approx.js'
-import { Vector } from './../../src/math/vector.js'
-import { Quaternion } from '../../src/math/quaternion.js'
+import Vector from './../../src/math/vector.js'
+import Quaternion from './../../src/math/quaternion.js'
 
 describe( 'math.Vector', () => {
   describe( 'Vector()', () => {
@@ -211,28 +211,57 @@ describe( 'math.Vector', () => {
     } )
   } )
 
-  // describe( 'Vector().rotate()', () => {
-  //   it( 'should be able to rotate a vector to 90deg by Z axis', ( next ) => {
-  //     const quaternion = Quaternion().fromAxisAngle( Vector( 0, 0, 1 ).toObject(), Math.PI / 2 ).toObject()
-  //     const vector = Vector( 1, 0, 0 ).rotate( quaternion ).toObject()
-  //     assert.ok( approx( vector.x, 3 ) === 0 && approx( vector.y, 3 ) === 1 && approx( vector.z, 3 ) === 0 )
-  //     next()
-  //   } )
+  describe( 'Vector().rotate()', () => {
+    it( 'should be able to rotate a vector to 90deg by Z axis', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 0, 0, 1 ), Math.PI / 2 )
+      const vector = Vector.create( 1, 0, 0 )
+      const rotated = Vector( vector ).rotate( quaternion ).toObject()
+      assert.ok( approx( rotated.x, 3 ) === 0 && approx( rotated.y, 3 ) === 1 && approx( rotated.z, 3 ) === 0 )
+      next()
+    } )
 
-  //   it( 'should be able to rotate a vector to 135deg by Y axis', ( next ) => {
-  //     const quaternion = Quaternion().fromAxisAngle( Vector( 0, 1, 0 ).toObject(), Math.PI * ( 3 / 4 ) ).toObject()
-  //     const vector = Vector( 1, 0, 0 ).rotate( quaternion ).toObject()
-  //     assert.ok( approx( vector.x, 3 ) === -0.707 && approx( vector.y, 3 ) === 0 && approx( vector.z, 3 ) === -0.707 )
-  //     next()
-  //   } )
+    it( 'should be able to rotate a vector to 135deg by Y axis', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 0, 1, 0 ), Math.PI * ( 3 / 4 ) )
+      const vector = Vector.create( 1, 0, 0 )
+      const rotated = Vector( vector ).rotate( quaternion ).toObject()
+      assert.ok( approx( rotated.x, 3 ) === -0.707 && approx( rotated.y, 3 ) === 0 && approx( rotated.z, 3 ) === -0.707 )
+      next()
+    } )
 
-  //   it( 'should be able to rotate a vector to 270deg by Z axis', ( next ) => {
-  //     const quaternion = Quaternion().fromAxisAngle( Vector( 0, 0, 1 ).toObject(), Math.PI * 2 * ( 3 / 4 ) ).toObject()
-  //     const vector = Vector( 1, 0, 0 ).rotate( quaternion ).toObject()
-  //     assert.ok( approx( vector.x, 3 ) === 0 && approx( vector.y, 3 ) === -1 && approx( vector.z, 3 ) === 0 )
-  //     next()
-  //   } )
-  // } )
+    it( 'should be able to rotate a vector to 270deg by Z axis', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 0, 0, 1 ), Math.PI * 2 * ( 3 / 4 ) )
+      const vector = Vector.create( 1, 0, 0 )
+      const rotated = Vector( vector ).rotate( quaternion ).toObject()
+      assert.ok( approx( rotated.x, 3 ) === 0 && approx( rotated.y, 3 ) === -1 && approx( rotated.z, 3 ) === 0 )
+      next()
+    } )
+  } )
+
+  describe( 'Vector().lerp()', () => {
+    it( 'should return the first vector values if time is 0', ( next ) => {
+      const vector1 = Vector.create( 5, 1, 2 )
+      const vector2 = Vector.create( 10, 2, 3 )
+      const lerp = Vector( vector1 ).clone().lerp( vector2, 0 ).toObject()
+      assert.ok( lerp.x === 5 && lerp.y === 1 && lerp.z === 2 )
+      next()
+    } )
+
+    it( 'should return the second vector values if time is 1', ( next ) => {
+      const vector1 = Vector.create( 5, 1, 2 )
+      const vector2 = Vector.create( 10, 2, 3 )
+      const lerp = Vector( vector1 ).clone().lerp( vector2, 1 ).toObject()
+      assert.ok( lerp.x === 10 && lerp.y === 2 && lerp.z === 3 )
+      next()
+    } )
+
+    it( 'should return a vector in the middle if time is 0.5', ( next ) => {
+      const vector1 = Vector.create( 1, 2, 3 )
+      const vector2 = Vector.create( 2, 3, 4 )
+      const lerp = Vector( vector1 ).clone().lerp( vector2, 0.5 ).toObject()
+      assert.ok( lerp.x === 1.5 && lerp.y === 2.5 && lerp.z === 3.5 )
+      next()
+    } )
+  } )
 
   describe( 'Vector.create()', () => {
     it( 'should create a (0,0,0) _VectorObject if no arguments specified', ( next ) => {
@@ -278,14 +307,14 @@ describe( 'math.Vector', () => {
   } )
 
   describe( 'Vector.isEqual()', () => {
-    it( 'should return true if a given point is equal to the other', ( next ) => {
+    it( 'should return true if a given vector is equal to the other', ( next ) => {
       const vector1 = Vector.create( 1, 2, 3 )
       const vector2 = Vector.create( 1, 2, 3 )
       assert.ok( Vector.isEqual( vector1, vector2 ) )
       next()
     } )
 
-    it( 'should return false if a given point is not equal to the other', ( next ) => {
+    it( 'should return false if a given vector is not equal to the other', ( next ) => {
       const vector1 = Vector.create( 1, 2, 3 )
       const vector2 = Vector.create( 3, 2, 1 )
       assert.ok( !Vector.isEqual( vector1, vector2 ) )
@@ -392,32 +421,6 @@ describe( 'math.Vector', () => {
       const vector2 = Vector.create( 0, 0, 0 )
       const angle = Vector.angle( vector1, vector2 )
       assert.ok( angle === Math.PI )
-      next()
-    } )
-  } )
-
-  describe( 'Vector.lerp()', () => {
-    it( 'should return the first vector values if time is 0', ( next ) => {
-      const vector1 = Vector.create( 5, 1, 2 )
-      const vector2 = Vector.create( 10, 2, 3 )
-      const lerp = Vector.lerp( vector1, vector2, 0 )
-      assert.ok( lerp.x === 5 && lerp.y === 1 && lerp.z === 2 )
-      next()
-    } )
-
-    it( 'should return the second vector values if time is 1', ( next ) => {
-      const vector1 = Vector.create( 5, 1, 2 )
-      const vector2 = Vector.create( 10, 2, 3 )
-      const lerp = Vector.lerp( vector1, vector2, 1 )
-      assert.ok( lerp.x === 10 && lerp.y === 2 && lerp.z === 3 )
-      next()
-    } )
-
-    it( 'should return a vector in the middle if time is 0.5', ( next ) => {
-      const vector1 = Vector.create( 1, 2, 3 )
-      const vector2 = Vector.create( 2, 3, 4 )
-      const lerp = Vector.lerp( vector1, vector2, 0.5 )
-      assert.ok( lerp.x === 1.5 && lerp.y === 2.5 && lerp.z === 3.5 )
       next()
     } )
   } )

@@ -33,12 +33,10 @@
   "devDependencies": {
     "c8": "^8.0.1",
     "mocha": "^10.2.0",
-    "eslint": "^8.46.0",
-    "documentation": "^14.0.2"
+    "eslint": "^8.46.0"
   },
   "scripts": {
-    "test": "c8 mocha --recursive",
-    "docs": "rm -rf ./docs && ./node_modules/.bin/documentation build src/index.js -f html -o docs && open ./docs/index.html"
+    "test": "c8 mocha --recursive"
   },
   "type": "module",
   "main": "./src/index.js"
