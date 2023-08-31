@@ -89,6 +89,38 @@ describe( 'math.Plane', () => {
     } )
   } )
 
+  describe( 'Plane().distanceToPoint()', () => {
+    it( 'should be able to return the distance from a plane to a point', ( next ) => {
+      const plane = Plane.create( Vector.create( 0, 1, 0 ), -4 )
+      const point = Vector.create( 1, 5, 1 )
+      assert.ok( Plane( plane ).distanceToPoint( point ) === 1 )
+      next()
+    } )
+
+    it( 'should be able to return the distance from a plane to a point if the point is on the plane', ( next ) => {
+      const plane = Plane.create( Vector.create( 0, 1, 0 ), -4 )
+      const point = Vector.create( 1, 4, 1 )
+      assert.ok( Plane( plane ).distanceToPoint( point ) === 0 )
+      next()
+    } )
+  } )
+
+  describe( 'Plane().containsPoint()', () => {
+    it( 'should return true if the point is coplanar', ( next ) => {
+      const plane = Plane.create( Vector.create( 0, 1, 0 ), -4 )
+      const point = Vector.create( 1, 4, 1 )
+      assert.ok( Plane( plane ).containsPoint( point ) )
+      next()
+    } )
+
+    it( 'should return false if the point is not coplanar', ( next ) => {
+      const plane = Plane.create( Vector.create( 0, 1, 0 ), -4 )
+      const point = Vector.create( 1, 5, 1 )
+      assert.ok( !Plane( plane ).containsPoint( point ) )
+      next()
+    } )
+  } )
+
   describe( 'Plane.create()', () => {
     it( 'should create a n=(0,1,0) c=0 _PlaneObject if no arguments specified', ( next ) => {
       const plane = Plane.create()
@@ -113,6 +145,22 @@ describe( 'math.Plane', () => {
       const normal = Vector.create( undefined, undefined, 1 )
       const plane = Plane.create( normal )
       assert.ok( ( plane.n.x === 0 ) && ( plane.n.y === 0 ) && ( plane.n.z === 1 ) && ( plane.c === 0 ) )
+      next()
+    } )
+  } )
+
+  describe( 'Plane.fromNormalAndPoint()', () => {
+    it( 'should create a plane from a normal and a point', ( next ) => {
+      const plane = Plane.fromNormalAndPoint( Vector.create( 0, 1, 0 ), Vector.create( 1, 1, 1 ) )
+      assert.ok( ( plane.n.x === 0 ) && ( plane.n.y === 1 ) && ( plane.n.z === 0 ) && ( plane.c === -1 ) )
+      next()
+    } )
+  } )
+
+  describe( 'Plane.fromPoints()', () => {
+    it( 'should create a plane from 3 points', ( next ) => {
+      const plane = Plane.fromPoints( Vector.create( 0, 2, 0 ), Vector.create( 1, 2, 1 ), Vector.create( 1, 2, 0 ) )
+      assert.ok( ( plane.n.x === 0 ) && ( plane.n.y === 1 ) && ( plane.n.z === 0 ) && ( plane.c === -2 ) )
       next()
     } )
   } )

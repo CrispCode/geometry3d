@@ -30,6 +30,14 @@ export default function Plane ( plane ) {
       Vector( original.n ).rotate( quaternion )
       original.c = original.c * original.n.x + original.c * original.n.y + original.c * original.n.z
       return Plane( original )
+    },
+
+    distanceToPoint ( point ) {
+      return Vector.dot( original.n, point ) + original.c
+    },
+
+    containsPoint ( point ) {
+      return ( Math.abs( Plane( original ).distanceToPoint( point ) ) <= Number.EPSILON )
     }
   }
 }
@@ -40,6 +48,19 @@ Plane.create = ( vector, constant = 0 ) => {
     n: Vector.isValid( vector ) ? vector : Vector.create( 0, 1, 0 ),
     c: constant
   }
+}
+
+// The vector must be normalized
+Plane.fromNormalAndPoint = ( normal, point ) => {
+  return Plane.create( normal, -1 * Vector.dot( normal, point ) )
+}
+
+Plane.fromPoints = ( a, b, c ) => {
+  const ab = Vector( a ).clone().subtract( b ).toObject()
+  const cb = Vector( c ).clone().subtract( b ).toObject()
+  const normal = Vector( Vector.cross( cb, ab ) ).normalize().toObject()
+
+  return Plane.fromNormalAndPoint( normal, a )
 }
 
 Plane.isValid = ( plane ) => {

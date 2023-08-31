@@ -81,28 +81,61 @@ describe( 'math.Triangle', () => {
     it( 'should return object with a,b,c properties representing the barycentric values for each vertex', ( next ) => {
       const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
       const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 0, 0, 2 ) )
-      assert.ok( barycentric.a === 0 && barycentric.b === 0 && barycentric.c === 1 )
+      assert.ok( barycentric.ab === 0 && barycentric.cb === 1 && barycentric.distance === 0 )
       next()
     } )
 
-    it( 'should get a mixture if point is in center', ( next ) => {
-      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
-      const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 1, 0, 1 ) )
-      assert.ok( barycentric.a === 0.5 && barycentric.b === 0 && barycentric.c === 0.5 )
-      next()
-    } )
-
-    it( 'should only work in one plane. If its on another plane it will treat is as being on the same plane. ', ( next ) => {
+    it( 'should only work in one plane. If its on another plane it will treat is as being on the same plane, but having distance', ( next ) => {
       const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
       const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 0, 1, 0 ) )
-      assert.ok( barycentric.a === 0 && barycentric.b === 1 && barycentric.c === 0 )
+      assert.ok( barycentric.ab === 0 && barycentric.cb === 0 && barycentric.distance === 1 )
       next()
     } )
 
-    it( 'should return object with a,b,c properties representing the barycentric values for each vertex. Test BC ', ( next ) => {
+    it( 'should return correctly if values are 1,0,1 and points are a = 2,0,0 b = 0,0,0 c = 0,0,2', ( next ) => {
       const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
-      const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 0, 0, 1 ) )
-      assert.ok( barycentric.a === 0 && barycentric.b === 0.5 && barycentric.c === 0.5 )
+      const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 1, 0, 1 ) )
+      assert.ok( barycentric.ab === 0.5 && barycentric.cb === 0.5 && barycentric.distance === 0 )
+      next()
+    } )
+
+    it( 'should return correctly if point is outside and below b', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      const barycentric = Triangle( triangle ).getBarycentric( Vector.create( -1, 0, -1 ) )
+      assert.ok( barycentric.ab === -0.5 && barycentric.cb === -0.5 && barycentric.distance === 0 )
+      next()
+    } )
+
+    it( 'should return correctly if point is outside and above b', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      const barycentric = Triangle( triangle ).getBarycentric( Vector.create( 0, 0, 3 ) )
+      assert.ok( barycentric.ab === 0 && barycentric.cb === 1.5 && barycentric.distance === 0 )
+      next()
+    } )
+  } )
+
+  describe( 'Triangle().containsPoint(vector)', () => {
+    it( 'should return true if point is inside the triangle', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      assert.ok( Triangle( triangle ).containsPoint( Vector.create( 1, 0, 1 ) ) )
+      next()
+    } )
+
+    it( 'should return false if point is outside the triangle', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      assert.ok( !Triangle( triangle ).containsPoint( Vector.create( 3, 0, 1 ) ) )
+      next()
+    } )
+
+    it( 'should return false if point is outside the triangle', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      assert.ok( !Triangle( triangle ).containsPoint( Vector.create( -3, 0, 1 ) ) )
+      next()
+    } )
+
+    it( 'should return false if point is inside the triangle but on a different plane', ( next ) => {
+      const triangle = Triangle.create( Vector.create( 2, 0, 0 ), Vector.create( 0, 0, 0 ), Vector.create( 0, 0, 2 ) )
+      assert.ok( !Triangle( triangle ).containsPoint( Vector.create( 1, 1, 1 ) ) )
       next()
     } )
   } )

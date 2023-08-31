@@ -1,40 +1,47 @@
 'use strict'
 
+import uid from './../utils/uid.js'
 import Vector from './../math/vector.js'
 import Quaternion from './../math/quaternion.js'
 
 export default class Base {
-  _type = this.constructor.name
+  #id = uid()
 
-  get type () {
-    return this._type
+  get id () {
+    return this.#id
   }
 
-  _position = Vector.create()
-  _scale = 1
-  _rotation = Quaternion.create()
+  #type = this.constructor.name
+
+  get type () {
+    return this.#type
+  }
+
+  #position = Vector.create()
+  #scale = 1
+  #rotation = Quaternion.create()
 
   get position () {
-    return Vector( this._position ).clone().toObject()
+    return Vector( this.#position ).clone().toObject()
   }
 
   get scale () {
-    return this._scale
+    return this.#scale
   }
 
   get rotation () {
-    return Quaternion( this._rotation ).clone().toObject()
+    return Quaternion( this.#rotation ).clone().toObject()
   }
 
-  _bounds = {
+  #bounds = {
     min: Vector.create(),
     max: Vector.create()
   }
 
   get bounds () {
     return {
-      min: Vector( this._bounds.min ).clone().toObject(),
-      max: Vector( this._bounds.max ).clone().toObject()
+      min: this.#bounds.min,
+      max: this.#bounds.max
     }
   }
 
@@ -50,13 +57,13 @@ export default class Base {
 
   static transform ( shape, translate = null, scale = null, rotate = null ) {
     if ( translate && Vector.isValid( translate ) ) {
-      Vector( shape._position ).add( translate )
+      Vector( shape.#position ).add( translate )
     }
     if ( scale && typeof scale === 'number' ) {
-      shape._scale *= scale
+      shape.#scale *= scale
     }
     if ( rotate && Quaternion.isValid( rotate ) ) {
-      Quaternion( shape._rotation ).premultiply( rotate )
+      Quaternion( shape.#rotation ).premultiply( rotate )
     }
 
     this.updateBounds( shape )

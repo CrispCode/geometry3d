@@ -1,15 +1,25 @@
 'use strict'
 
-import { Point, isValidPoint } from './math/point.js'
-import { Quaternion, isValidQuaternion } from './math/quaternion.js'
-import { Vector, isValidVector } from './math/vector.js'
+import Grid from './collision/grid.js'
+
+import Plane from './math/plane.js'
+import Quaternion from './math/quaternion.js'
+import Triangle from './math/triangle.js'
+import Vector from './math/vector.js'
+
+import Box from './shapes/box.js'
+import Polyhedron from './shapes/polyhedron.js'
+import Sphere from './shapes/sphere.js'
 
 export {
-  isValidPoint,
-  Point,
-  isValidVector,
-  Vector,
-  isValidQuaternion,
-  Quaternion
+  Grid,
 
+  Plane,
+  Quaternion,
+  Triangle,
+  Vector,
+
+  Box,
+  Polyhedron,
+  Sphere
 }

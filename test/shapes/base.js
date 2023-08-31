@@ -71,6 +71,11 @@ describe( 'shapes.Base', () => {
   } )
 
   describe( 'extending the class', () => {
+    it( 'should be able to get the .id property', ( next ) => {
+      assert.ok( typeof instance.id === 'string' )
+      next()
+    } )
+
     it( 'should be able to get the .type property', ( next ) => {
       assert.ok( instance.type === 'Extend' )
       next()
@@ -82,15 +87,42 @@ describe( 'shapes.Base', () => {
       next()
     } )
 
+    it( 'should not be able to modify the .position', ( next ) => {
+      instance.position.x = 1000
+      instance.position.y = 1000
+      instance.position.z = 1000
+      assert.ok( instance.position.x !== 1000 && instance.position.y !== 1000 && instance.position.z !== 1000 )
+      next()
+    } )
+
     it( 'should be able to get the .scale property which should be a Number', ( next ) => {
       assert.ok( typeof instance.scale === 'number' )
       assert.ok( instance.scale === 1 )
       next()
     } )
 
+    it( 'should not be able to modify the .scale', ( next ) => {
+      try {
+        instance.scale = 1000
+        assert.ok( instance.scale === 1000 )
+      } catch ( err ) {
+        assert.ok( instance.scale !== 1000 )
+      }
+      next()
+    } )
+
     it( 'should be able to get the .rotation property which should be a Quaternion', ( next ) => {
       assert.ok( Quaternion.isValid( instance.rotation ) )
       assert.ok( instance.rotation.x === 0 && instance.rotation.y === 0 && instance.rotation.z === 0 && instance.rotation.w === 1 )
+      next()
+    } )
+
+    it( 'should not be able to modify the .rotation', ( next ) => {
+      instance.rotation.x = 1000
+      instance.rotation.y = 1000
+      instance.rotation.z = 1000
+      instance.rotation.w = 1000
+      assert.ok( instance.rotation.x !== 1000 && instance.rotation.y !== 1000 && instance.rotation.z !== 1000 && instance.rotation.w !== 1000 )
       next()
     } )
 

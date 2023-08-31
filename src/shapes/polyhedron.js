@@ -6,18 +6,18 @@ import Vector from './../math/vector.js'
 import Triangle from './../math/triangle.js'
 
 export default class Polyhedron extends Base {
-  _vertices = []
-  _faces = []
-  _normals = []
+  #vertices = []
+  #faces = []
+  #normals = []
 
   get vertices () {
-    return [ ...this._vertices ]
+    return [ ...this.#vertices ]
   }
   get faces () {
-    return [ ...this._faces ]
+    return [ ...this.#faces ]
   }
   get normals () {
-    return [ ...this._normals ]
+    return [ ...this.#normals ]
   }
 
   constructor ( vertices ) {
@@ -28,13 +28,13 @@ export default class Polyhedron extends Base {
       const v2 = vertices[ i + 1 ]
       const v3 = vertices[ i + 2 ]
 
-      if ( this._vertices.indexOf( v1 ) === -1 ) { this._vertices.push( v1 ) }
-      if ( this._vertices.indexOf( v2 ) === -1 ) { this._vertices.push( v2 ) }
-      if ( this._vertices.indexOf( v3 ) === -1 ) { this._vertices.push( v3 ) }
+      if ( this.#vertices.indexOf( v1 ) === -1 ) { this.#vertices.push( v1 ) }
+      if ( this.#vertices.indexOf( v2 ) === -1 ) { this.#vertices.push( v2 ) }
+      if ( this.#vertices.indexOf( v3 ) === -1 ) { this.#vertices.push( v3 ) }
 
       const face = Triangle.create( v1, v2, v3 )
-      this._faces.push( face )
-      this._normals.push( Triangle( face ).normal() )
+      this.#faces.push( face )
+      this.#normals.push( Triangle( face ).normal() )
     }
 
     this.constructor.updateBounds( this )
@@ -53,8 +53,8 @@ export default class Polyhedron extends Base {
       if ( vector.z > max.z ) { max.z = vector.z }
     } )
 
-    Vector( polyhedron._bounds.min ).copy( min )
-    Vector( polyhedron._bounds.max ).copy( max )
+    Vector( polyhedron.bounds.min ).copy( min )
+    Vector( polyhedron.bounds.max ).copy( max )
   }
 
   static transform ( polyhedron, translate, scale, rotate ) {

@@ -1,6 +1,7 @@
 'use strict'
 
 import Vector from './vector.js'
+import Plane from './plane.js'
 
 export default function Triangle ( triangle ) {
   const original = Triangle.isValid( triangle ) ? triangle : Triangle.create()
@@ -31,6 +32,7 @@ export default function Triangle ( triangle ) {
       return Vector( Vector.cross( vCB, vAB ) ).normalize().toObject()
     },
 
+    // https://blackpawn.com/texts/pointinpoly/default.html
     getBarycentric ( point ) {
       const v0 = Vector( original.c ).clone().subtract( original.b ).toObject()
       const v1 = Vector( original.a ).clone().subtract( original.b ).toObject()
@@ -44,15 +46,28 @@ export default function Triangle ( triangle ) {
       const dot12 = Vector.dot( v1, v2 )
 
       const denominator = dot00 * dot11 - dot01 * dot01
-      const u = ( dot11 * dot02 - dot01 * dot12 ) / denominator
-      const v = ( dot00 * dot12 - dot01 * dot02 ) / denominator
-      const w = 1 - u - v
+      const cb = ( dot11 * dot02 - dot01 * dot12 ) / denominator
+      const ab = ( dot00 * dot12 - dot01 * dot02 ) / denominator
+
+      // Used to check depth of point
+      const normal = Vector( Vector.cross( v0, v1 ) ).normalize().toObject()
+      const plane = Plane.fromNormalAndPoint( normal, original.a )
 
       return {
-        a: v,
-        b: w,
-        c: u
+        ab: ab,
+        cb: cb,
+        distance: Plane( plane ).distanceToPoint( point ) // Distance to plane in 3D
       }
+    },
+
+    containsPoint ( point ) {
+      const barycentric = Triangle( original ).getBarycentric( point )
+      return (
+        barycentric.ab > 0 &&
+        barycentric.cb > 0 &&
+        barycentric.ab + barycentric.cb <= 1 &&
+        Math.abs( barycentric.distance ) <= Number.EPSILON
+      )
     }
   }
 }
