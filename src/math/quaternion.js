@@ -134,6 +134,34 @@ export default function Quaternion ( quaternion ) {
       original.w = ( w * ratioA + original.w * ratioB )
 
       return Quaternion( original )
+    },
+
+    toEuler: () => {
+      const x = original.x
+      const y = original.y
+      const z = original.z
+      const w = original.w
+
+      // Calculate the pitch (x-axis rotation)
+      const sinPitch = 2.0 * ( w * x - y * z )
+      const cosPitch = 1.0 - 2.0 * ( x * x + y * y )
+      const pitch = Math.atan2( sinPitch, cosPitch )
+
+      // Calculate the yaw (y-axis rotation)
+      const sinYaw = 2.0 * ( w * y + x * z )
+      const cosYaw = 1.0 - 2.0 * ( y * y + z * z )
+      const yaw = Math.atan2( sinYaw, cosYaw )
+
+      // Calculate the roll (z-axis rotation)
+      const sinRoll = 2.0 * ( w * z + x * y )
+      const cosRoll = 1.0 - 2.0 * ( y * y + z * z )
+      const roll = Math.atan2( sinRoll, cosRoll )
+
+      return {
+        x: pitch,
+        y: yaw,
+        z: roll
+      }
     }
   }
 }

@@ -211,6 +211,36 @@ describe( 'math.Quaternion', () => {
     } )
   } )
 
+  describe( 'Quaternion().toEuler()', () => {
+    it( 'should return euler angle for axis X and angle 45', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 1, 0, 0 ), Math.PI / 4 )
+      const euler = Quaternion( quaternion ).toEuler()
+      assert.ok( approx( euler.x, 6 ) === approx( Math.PI / 4, 6 ) && euler.y === 0 && euler.z === 0 )
+      next()
+    } )
+
+    it( 'should return euler angle for axis Y and angle 45', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 0, 1, 0 ), Math.PI / 4 )
+      const euler = Quaternion( quaternion ).toEuler()
+      assert.ok( euler.x === 0 && approx( euler.y, 6 ) === approx( Math.PI / 4, 6 ) && euler.z === 0 )
+      next()
+    } )
+
+    it( 'should return euler angle for axis Z and angle 45', ( next ) => {
+      const quaternion = Quaternion.fromAxisAngle( Vector.create( 0, 0, 1 ), Math.PI / 4 )
+      const euler = Quaternion( quaternion ).toEuler()
+      assert.ok( euler.x === 0 && euler.y === 0 && approx( euler.z, 6 ) === approx( Math.PI / 4, 6 ) )
+      next()
+    } )
+
+    it( 'should return euler angles a complex rotation', ( next ) => {
+      const quaternion = Quaternion.fromUnitVectors( Vector.create( 1, 1, 1 ), Vector.create( -1, -1, -1 ) )
+      const euler = Quaternion( quaternion ).toEuler()
+      assert.ok( euler.x === 1.5707963267948963 && euler.y === 3.141592653589793 && euler.z === 3.141592653589793 )
+      next()
+    } )
+  } )
+
   describe( 'Quaternion.create()', () => {
     it( 'should create a (0,0,0,1) _QuaternionObject if no arguments specified', ( next ) => {
       const quaternion = Quaternion.create()

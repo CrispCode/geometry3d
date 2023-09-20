@@ -59,7 +59,7 @@ describe( 'collision.Grid', () => {
       grid.add( createSphere( 1, 3, 3, 2 ) )
 
       grid.applyToCellsInArea( 0, 5, 0, 5, 0, 5, ( cell ) => {
-        assert.ok( cell.size === 3 )
+        assert.ok( cell.children.size === 3 )
       } )
       next()
     } )
@@ -81,14 +81,62 @@ describe( 'collision.Grid', () => {
       grid.add( createSphere( 1, 3, 3, 2 ) )
 
       grid.applyToCellsInArea( 0, 5, 0, 5, 0, 5, ( cell ) => {
-        assert.ok( cell.size === 3 )
+        assert.ok( cell.children.size === 3 )
       } )
 
       grid.remove( shape1 )
 
       grid.applyToCellsInArea( 0, 5, 0, 5, 0, 5, ( cell ) => {
-        assert.ok( cell.size === 2 )
+        assert.ok( cell.children.size === 2 )
       } )
+
+      next()
+    } )
+
+    it( 'should remove a cell if it has no children', ( next ) => {
+      const grid = new Grid( 10 )
+
+      const createSphere = ( radius, x, y, z ) => {
+        const shape = new Sphere( radius )
+        Sphere.transform( shape, Vector.create( x, y, z ), null, null )
+        return shape
+      }
+
+      const shape1 = createSphere( 1, 2, 3, 4 )
+      grid.add( shape1 )
+
+      grid.applyToCellsInArea( 0, 5, 0, 5, 0, 5, ( cell ) => {
+        assert.ok( cell.children.size === 1 )
+      } )
+
+      grid.remove( shape1 )
+
+      let cells = 0
+      grid.applyToCellsInArea( 0, 5, 0, 5, 0, 5, () => {
+        cells++
+      } )
+      assert.ok( cells === 0 )
+
+      next()
+    } )
+  } )
+
+  describe( 'Grid().clear()', () => {
+    it( 'should empty the grid', ( next ) => {
+      const grid = new Grid( 10 )
+
+      const createSphere = ( radius, x, y, z ) => {
+        const shape = new Sphere( radius )
+        Sphere.transform( shape, Vector.create( x, y, z ), null, null )
+        return shape
+      }
+
+      grid.add( createSphere( 1, 2, 2, 3 ) )
+      grid.add( createSphere( 5, 15, 3, 2 ) )
+
+      assert.ok( grid.cells.size === 9 )
+      grid.clear()
+      assert.ok( grid.cells.size === 0 )
 
       next()
     } )
@@ -109,7 +157,27 @@ describe( 'collision.Grid', () => {
       grid.add( createSphere( 1, 22, 22, 22 ) )
 
       grid.applyToCellsOfShape( createSphere( 1, 13, 13, 13 ), ( cell ) => {
-        assert.ok( cell.size === 1 )
+        assert.ok( cell.children.size === 1 )
+      } )
+
+      next()
+    } )
+
+    it( 'should get the cell and the cell should contain the coordonates', ( next ) => {
+      const grid = new Grid( 5 )
+
+      const createSphere = ( radius, x, y, z ) => {
+        const shape = new Sphere( radius )
+        Sphere.transform( shape, Vector.create( x, y, z ), null, null )
+        return shape
+      }
+
+      grid.add( createSphere( 1, 2, 2, 2 ) )
+      grid.add( createSphere( 1, 12, 12, 12 ) )
+      grid.add( createSphere( 1, 22, 22, 22 ) )
+
+      grid.applyToCellsOfShape( createSphere( 1, 13, 13, 13 ), ( cell ) => {
+        assert.ok( cell.x === 2 && cell.y === 2 && cell.z === 2 )
       } )
 
       next()

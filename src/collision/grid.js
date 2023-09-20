@@ -21,12 +21,33 @@ export default class Grid {
     return Math.floor( value / this.#cellSize )
   }
 
+  #createCell ( x, y, z ) {
+    return {
+      id: this.constructor.getCellName( x, y, z ),
+      children: new Map(),
+      x: x,
+      y: y,
+      z: z
+    }
+  }
+
   add ( shape ) {
     const boundsMin = Vector( shape.bounds.min ).clone().add( shape.position ).toObject()
     const boundsMax = Vector( shape.bounds.max ).clone().add( shape.position ).toObject()
-    this.applyToCellsInArea( boundsMin.x, boundsMax.x, boundsMin.y, boundsMax.y, boundsMin.z, boundsMax.z, ( cell ) => {
-      cell.set( shape.id, shape )
-    } )
+
+    for ( let fromX = this.#getCellValueFromCoordonate( boundsMin.x ), toX = this.#getCellValueFromCoordonate( boundsMax.x ), i = fromX; i <= toX; i++ ) {
+      for ( let fromY = this.#getCellValueFromCoordonate( boundsMin.y ), toY = this.#getCellValueFromCoordonate( boundsMax.y ), j = fromY; j <= toY; j++ ) {
+        for ( let fromZ = this.#getCellValueFromCoordonate( boundsMin.z ), toZ = this.#getCellValueFromCoordonate( boundsMax.z ), k = fromZ; k <= toZ; k++ ) {
+          const pn = this.constructor.getCellName( i, j, k )
+          let cell = this.#grid.get( pn )
+          if ( !cell ) {
+            cell = this.#createCell( i, j, k )
+            this.#grid.set( pn, cell )
+          }
+          cell.children.set( shape.id, shape )
+        }
+      }
+    }
     return this
   }
 
@@ -34,9 +55,16 @@ export default class Grid {
     const boundsMin = Vector( shape.bounds.min ).clone().add( shape.position ).toObject()
     const boundsMax = Vector( shape.bounds.max ).clone().add( shape.position ).toObject()
     this.applyToCellsInArea( boundsMin.x, boundsMax.x, boundsMin.y, boundsMax.y, boundsMin.z, boundsMax.z, ( cell ) => {
-      cell.delete( shape.id )
+      cell.children.delete( shape.id )
+      if ( cell.children.size === 0 ) {
+        this.#grid.delete( cell.id )
+      }
     } )
     return this
+  }
+
+  clear () {
+    this.#grid.clear()
   }
 
   applyToCellsOfShape ( shape, callback ) {
@@ -49,9 +77,10 @@ export default class Grid {
     for ( let fromX = this.#getCellValueFromCoordonate( x1 ), toX = this.#getCellValueFromCoordonate( x2 ), i = fromX; i <= toX; i++ ) {
       for ( let fromY = this.#getCellValueFromCoordonate( y1 ), toY = this.#getCellValueFromCoordonate( y2 ), j = fromY; j <= toY; j++ ) {
         for ( let fromZ = this.#getCellValueFromCoordonate( z1 ), toZ = this.#getCellValueFromCoordonate( z2 ), k = fromZ; k <= toZ; k++ ) {
-          const pn = this.constructor.getCellName( i, j, k )
-          this.#grid.set( pn, this.#grid.get( pn ) || new Map() )
-          fn( this.#grid.get( pn ), i, j, k )
+          const cell = this.#grid.get( this.constructor.getCellName( i, j, k ) )
+          if ( cell ) {
+            fn( cell )
+          }
         }
       }
     }

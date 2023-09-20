@@ -51,16 +51,6 @@ describe( 'shapes.Polyhedron', () => {
     next()
   } )
 
-  describe( 'Polyhedron.updateBounds()', () => {
-    it( 'should have a static method .updateBounds(shape) which updates the bounds properties on transform', ( next ) => {
-      assert.ok( typeof Polyhedron.updateBounds === 'function' )
-      const polyhedron = new Polyhedron( generateCubeVertices( 3, 3, 3 ) )
-      Polyhedron.transform( polyhedron, null, 2, null )
-      assert.ok( Vector.isEqual( polyhedron.bounds.min, Vector.create( -3, -3, -3 ) ) && Vector.isEqual( polyhedron.bounds.max, Vector.create( 3, 3, 3 ) ) )
-      next()
-    } )
-  } )
-
   describe( 'Polyhedron.transform()', () => {
     it( 'should have a static method .transform(shape,translate,scale,rotate)', ( next ) => {
       assert.ok( typeof Polyhedron.transform === 'function' )
@@ -90,17 +80,41 @@ describe( 'shapes.Polyhedron', () => {
     } )
   } )
 
+  describe( 'Polyhedron.clone()', () => {
+    it( 'should have a static method .clone(polyhedron)', ( next ) => {
+      assert.ok( typeof Polyhedron.clone === 'function' )
+
+      const instance = new Polyhedron( generateCubeVertices( 5, 5, 5 ) )
+      Polyhedron.transform( instance, Vector.create( 1, 1, 1 ), 5, Quaternion.create( 5, 5, 5, 5 ) )
+      const clone = Polyhedron.clone( instance )
+
+      assert.ok( Vector.isEqual( clone.position, instance.position ) )
+      assert.ok( clone.scale === instance.scale )
+      assert.ok( Quaternion.isEqual( clone.rotation, instance.rotation ) )
+      assert.ok( Vector.isEqual( clone.bounds.min, instance.bounds.min ) )
+      assert.ok( Vector.isEqual( clone.bounds.max, instance.bounds.max ) )
+
+      clone.vertices.forEach( ( vertex, index ) => {
+        assert.ok( Vector.isEqual( vertex, instance.vertices[ index ] ) )
+      } )
+      clone.faces.forEach( ( triangle, index ) => {
+        assert.ok( Triangle.isEqual( triangle, instance.faces[ index ] ) )
+      } )
+
+      next()
+    } )
+  } )
+
   describe( 'constructor()', () => {
     it( 'should be able to create an instance if an array of vertices is provided', ( next ) => {
       const polyhedron = new Polyhedron( generateCubeVertices( 5, 5, 5 ) )
-      assert.ok( polyhedron.type === 'Polyhedron' )
+      assert.ok( polyhedron.type === 'polyhedron' )
       next()
     } )
 
     it( 'should return an array containing the vertices with no duplicates when using .vertices', ( next ) => {
       const polyhedron = new Polyhedron( generateCubeVertices( 5, 5, 5 ) )
       const vertices = polyhedron.vertices
-      assert.ok( vertices !== polyhedron.vertices )
       let unique = [ ...new Set( vertices ) ]
       assert.ok( unique.length === vertices.length && unique.length === 8 )
       next()
@@ -110,7 +124,6 @@ describe( 'shapes.Polyhedron', () => {
       const polyhedron = new Polyhedron( generateCubeVertices( 5, 5, 5 ) )
       const faces = polyhedron.faces
 
-      assert.ok( faces !== polyhedron.faces )
       assert.ok( faces.length === 12 )
 
       const results = [
@@ -185,31 +198,9 @@ describe( 'shapes.Polyhedron', () => {
       next()
     } )
 
-    it( 'should return an array containing the faces normals when using .normals', ( next ) => {
-      const polyhedron = new Polyhedron( generateCubeVertices( 5, 5, 5 ) )
-      const normals = polyhedron.normals
-      assert.ok( normals !== polyhedron.normals )
-      assert.ok( normals.length === 12 )
-
-      const results = [
-        { x: 0, y: -0, z: 1 },
-        { x: -0, y: 0, z: 1 },
-        { x: -1, y: 0, z: 0 },
-        { x: -1, y: -0, z: -0 },
-        { x: 0, y: 0, z: -1 },
-        { x: 0, y: 0, z: -1 },
-        { x: 1, y: 0, z: 0 },
-        { x: 1, y: 0, z: 0 },
-        { x: 0, y: -1, z: 0 },
-        { x: 0, y: -1, z: 0 },
-        { x: 0, y: 1, z: -0 },
-        { x: -0, y: 1, z: 0 }
-      ]
-
-      normals.forEach( ( vector, index ) => {
-        assert.ok( Vector.isValid( vector ) )
-        assert.ok( Vector.isEqual( vector, results[ index ] ) )
-      } )
+    it( 'should update bounds on creation', ( next ) => {
+      const polyhedron = new Polyhedron( generateCubeVertices( 6, 6, 6 ) )
+      assert.ok( Vector.isEqual( polyhedron.bounds.min, Vector.create( -3, -3, -3 ) ) && Vector.isEqual( polyhedron.bounds.max, Vector.create( 3, 3, 3 ) ) )
       next()
     } )
   } )

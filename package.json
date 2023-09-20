@@ -39,7 +39,7 @@
   },
   "scripts": {
     "test": "c8 mocha --recursive -R progress -b",
-    "start": "npx webpack --entry ./src/index.js -o ./playground && npx webpack serve --open --static ./playground"
+    "start": "npx webpack serve --open --static ./playground"
   },
   "type": "module",
   "main": "./src/index.js"

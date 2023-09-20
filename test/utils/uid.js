@@ -5,7 +5,7 @@ import uid from './../../src/utils/uid.js'
 
 describe( 'utils.uid', () => {
   it( 'should return a unique identifier', ( next ) => {
-    assert.ok( typeof uid() === 'string' )
+    assert.ok( typeof uid() === 'number' )
     next()
   } )
 

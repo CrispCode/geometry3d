@@ -7,28 +7,29 @@ import Vector from './../../src/math/vector.js'
 export default class Sphere extends Base {
   #radius = 1
 
-  get radius () {
-    return this.#radius
-  }
+  radius = 1
 
-  constructor ( radius ) {
+  constructor ( radius = 1 ) {
     super()
 
-    this.#radius = ( typeof radius === 'number' ) ? radius : this.#radius
+    this.#radius = radius
+    this.radius = radius
 
-    this.constructor.updateBounds( this )
+    // Compute bounding box
+    Vector( this.bounds.min ).copy( Vector.create( -1 * radius, -1 * radius, -1 * radius ) )
+    Vector( this.bounds.max ).copy( Vector.create( 1 * radius, 1 * radius, 1 * radius ) )
   }
 
-  static updateBounds ( sphere ) {
-    Vector( sphere.bounds.min ).copy( Vector.create( -1 * sphere.radius, -1 * sphere.radius, -1 * sphere.radius ) )
-    Vector( sphere.bounds.max ).copy( Vector.create( 1 * sphere.radius, 1 * sphere.radius, 1 * sphere.radius ) )
-  }
+  update () {
+    if ( this.needsUpdate ) {
+      const radius = this.#radius * this.scale
+      this.radius = radius
 
-  static transform ( sphere, translate, scale, rotate ) {
-    if ( scale && typeof scale === 'number' ) {
-      sphere.#radius *= scale
+      // Compute bounding box
+      Vector( this.bounds.min ).copy( Vector.create( -1 * radius, -1 * radius, -1 * radius ) )
+      Vector( this.bounds.max ).copy( Vector.create( 1 * radius, 1 * radius, 1 * radius ) )
     }
 
-    super.transform( sphere, translate, scale, rotate )
+    super.update()
   }
 }

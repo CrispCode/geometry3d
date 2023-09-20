@@ -22,6 +22,9 @@ export class Playground {
   #renderer = null
   #scene = null
   #camera = null
+  get camera () {
+    return this.#camera
+  }
 
   #controls = null
 
@@ -54,7 +57,7 @@ export class Playground {
     this.#renderer = renderer
 
     // Create camera
-    const camera = new PerspectiveCamera( 75, 1, 1, 1000 )
+    const camera = new PerspectiveCamera( 75, 1, 1, 10000 )
     camera.position.set( 10, 10, 100 )
     this.#camera = camera
 

@@ -2,56 +2,44 @@
 
 import Polyhedron from './polyhedron.js'
 
-import Vector from './../math/vector.js'
-
 export default class Box extends Polyhedron {
-  constructor ( min, max ) {
-    const center = Vector( min ).clone().lerp( max, 0.5 ).subtract( min ).toObject()
-    const centerToWorld = Vector( center ).clone().add( min ).toObject()
-
-    const vertices = {
-      v000: Vector( Vector.create( -center.x, -center.y, -center.z ) ).add( centerToWorld ).toObject(),
-      v100: Vector( Vector.create( center.x, -center.y, -center.z ) ).add( centerToWorld ).toObject(),
-      v010: Vector( Vector.create( -center.x, center.y, -center.z ) ).add( centerToWorld ).toObject(),
-      v110: Vector( Vector.create( center.x, center.y, -center.z ) ).add( centerToWorld ).toObject(),
-      v001: Vector( Vector.create( -center.x, -center.y, center.z ) ).add( centerToWorld ).toObject(),
-      v101: Vector( Vector.create( center.x, -center.y, center.z ) ).add( centerToWorld ).toObject(),
-      v011: Vector( Vector.create( -center.x, center.y, center.z ) ).add( centerToWorld ).toObject(),
-      v111: Vector( Vector.create( center.x, center.y, center.z ) ).add( centerToWorld ).toObject()
-    }
-
-    const faces = [
-      // Front
-      vertices.v001, vertices.v101, vertices.v111,
-      vertices.v111, vertices.v011, vertices.v001,
-      // Left
-      vertices.v010, vertices.v000, vertices.v001,
-      vertices.v001, vertices.v011, vertices.v010,
-      // Back
-      vertices.v000, vertices.v010, vertices.v110,
-      vertices.v110, vertices.v100, vertices.v000,
-      // Right
-      vertices.v100, vertices.v110, vertices.v101,
-      vertices.v110, vertices.v111, vertices.v101,
-      // Bottom
-      vertices.v000, vertices.v100, vertices.v101,
-      vertices.v101, vertices.v001, vertices.v000,
-      // Top
-      vertices.v111, vertices.v110, vertices.v010,
-      vertices.v010, vertices.v011, vertices.v111
-    ]
-
-    super( faces )
-  }
-
-  static fromSize ( width = 1, height = 1, depth = 1 ) {
+  constructor ( width = 1, height = 1, depth = 1 ) {
     const halfW = width / 2
     const halfH = height / 2
     const halfD = depth / 2
 
-    const min = Vector.create( -halfW, -halfH, -halfD )
-    const max = Vector.create( halfW, halfH, halfD )
+    const vertices = [
+      halfW, halfH, halfD, // v111
+      -halfW, halfH, halfD, // v011
+      halfW, -halfH, halfD, // v101
+      -halfW, -halfH, halfD, // v001
+      halfW, halfH, -halfD, // v110
+      -halfW, halfH, -halfD, // v010
+      halfW, -halfH, -halfD, // v100
+      -halfW, -halfH, -halfD // v000
+    ]
 
-    return new this( min, max )
+    const indexes = [
+      // Front
+      3, 2, 0,
+      0, 1, 3,
+      // Left
+      5, 7, 3,
+      3, 1, 5,
+      // Back
+      7, 5, 4,
+      4, 6, 7,
+      // Right
+      6, 4, 2,
+      4, 0, 2,
+      // Bottom
+      7, 6, 2,
+      2, 3, 7,
+      // Top
+      0, 4, 5,
+      5, 1, 0
+    ]
+
+    super( vertices, indexes )
   }
 }

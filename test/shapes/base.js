@@ -1,4 +1,4 @@
-/* globals describe, it, before, after */
+/* globals describe, it, beforeEach, afterEach */
 
 import assert from 'assert'
 import Base from './../../src/shapes/base.js'
@@ -9,28 +9,14 @@ describe( 'shapes.Base', () => {
   class Extend extends Base {}
   let instance = null
 
-  before( () => {
+  beforeEach( () => {
     instance = new Extend()
-  } )
-
-  describe( 'Base.updateBounds()', () => {
-    it( 'should have a static method .updateBounds(shape)', ( next ) => {
-      assert.ok( typeof Base.updateBounds === 'function' )
-      try {
-        Base.updateBounds()
-      } catch ( err ) {
-        assert.ok( err.message === '.updateBounds() is not implemented' )
-      }
-      next()
-    } )
   } )
 
   describe( 'Base.transform()', () => {
     it( 'should have a static method .transform(shape, translate, scale, rotate)', ( next ) => {
       assert.ok( typeof Base.transform === 'function' )
-      class Extend1 extends Base {
-        static updateBounds () {}
-      }
+      class Extend1 extends Base {}
 
       const example = new Extend1()
       Extend1.transform( example, Vector.create( 1, 1, 1 ), null, null )
@@ -50,6 +36,23 @@ describe( 'shapes.Base', () => {
     } )
   } )
 
+  describe( 'Base.clone()', () => {
+    it( 'should have a static method .clone(shape)', ( next ) => {
+      assert.ok( typeof Base.clone === 'function' )
+
+      Base.transform( instance, Vector.create( 1, 1, 1 ), 5, Quaternion.create( 5, 5, 5, 5 ) )
+      const clone = Extend.clone( instance )
+
+      assert.ok( Vector.isEqual( clone.position, instance.position ) )
+      assert.ok( clone.scale === instance.scale )
+      assert.ok( Quaternion.isEqual( clone.rotation, instance.rotation ) )
+      assert.ok( Vector.isEqual( clone.bounds.min, instance.bounds.min ) )
+      assert.ok( Vector.isEqual( clone.bounds.max, instance.bounds.max ) )
+
+      next()
+    } )
+  } )
+
   describe( 'Base.isValid()', () => {
     it( 'should have a static method .isValid(shape)', ( next ) => {
       assert.ok( typeof Base.isValid === 'function' )
@@ -62,7 +65,6 @@ describe( 'shapes.Base', () => {
     it( 'should not be able to create a class instance', ( next ) => {
       try {
         const base = new Base()
-        console.log( base )
       } catch ( err ) {
         assert.ok( err.message === 'Cannot create instance of abstract class Base' )
       }
@@ -72,12 +74,12 @@ describe( 'shapes.Base', () => {
 
   describe( 'extending the class', () => {
     it( 'should be able to get the .id property', ( next ) => {
-      assert.ok( typeof instance.id === 'string' )
+      assert.ok( typeof instance.id === 'number' )
       next()
     } )
 
     it( 'should be able to get the .type property', ( next ) => {
-      assert.ok( instance.type === 'Extend' )
+      assert.ok( instance.type === 'extend' )
       next()
     } )
 
@@ -87,42 +89,15 @@ describe( 'shapes.Base', () => {
       next()
     } )
 
-    it( 'should not be able to modify the .position', ( next ) => {
-      instance.position.x = 1000
-      instance.position.y = 1000
-      instance.position.z = 1000
-      assert.ok( instance.position.x !== 1000 && instance.position.y !== 1000 && instance.position.z !== 1000 )
-      next()
-    } )
-
     it( 'should be able to get the .scale property which should be a Number', ( next ) => {
       assert.ok( typeof instance.scale === 'number' )
       assert.ok( instance.scale === 1 )
       next()
     } )
 
-    it( 'should not be able to modify the .scale', ( next ) => {
-      try {
-        instance.scale = 1000
-        assert.ok( instance.scale === 1000 )
-      } catch ( err ) {
-        assert.ok( instance.scale !== 1000 )
-      }
-      next()
-    } )
-
     it( 'should be able to get the .rotation property which should be a Quaternion', ( next ) => {
       assert.ok( Quaternion.isValid( instance.rotation ) )
       assert.ok( instance.rotation.x === 0 && instance.rotation.y === 0 && instance.rotation.z === 0 && instance.rotation.w === 1 )
-      next()
-    } )
-
-    it( 'should not be able to modify the .rotation', ( next ) => {
-      instance.rotation.x = 1000
-      instance.rotation.y = 1000
-      instance.rotation.z = 1000
-      instance.rotation.w = 1000
-      assert.ok( instance.rotation.x !== 1000 && instance.rotation.y !== 1000 && instance.rotation.z !== 1000 && instance.rotation.w !== 1000 )
       next()
     } )
 
@@ -137,7 +112,7 @@ describe( 'shapes.Base', () => {
     } )
   } )
 
-  after( () => {
+  afterEach( () => {
     instance = null
   } )
 } )
