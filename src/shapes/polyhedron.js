@@ -1,11 +1,11 @@
 'use strict'
 
-import Base from './base.js'
+import { Base } from './base.js'
 
-import Vector from './../math/vector.js'
-import Triangle from './../math/triangle.js'
+import { Vector } from './../math/vector.js'
+import { Triangle } from './../math/triangle.js'
 
-export default class Polyhedron extends Base {
+export class Polyhedron extends Base {
   #vertices = []
   #faces = []
 

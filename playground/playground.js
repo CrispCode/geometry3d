@@ -78,7 +78,7 @@ export class Playground {
     const watcherSize = () => {
       setTimeout( () => {
         if ( this.#size.isWatched ) {
-          const element = this.element
+          const element = this.#element
           if ( this.#size.width !== element.clientWidth || this.#size.height !== element.clientHeight ) {
             this.#size.width = element.clientWidth
             this.#size.height = element.clientHeight

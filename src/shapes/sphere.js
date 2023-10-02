@@ -1,10 +1,10 @@
 'use strict'
 
-import Base from './base.js'
+import { Base } from './base.js'
 
-import Vector from './../../src/math/vector.js'
+import { Vector } from './../../src/math/vector.js'
 
-export default class Sphere extends Base {
+export class Sphere extends Base {
   #radius = 1
 
   radius = 1

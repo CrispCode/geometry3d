@@ -46,7 +46,12 @@ export class Element {
     digdeep( this.#element )
   }
 
-  update () {}
+  update () {
+    const data = this.data
+    this.element.position.set( data.position.x, data.position.y, data.position.z )
+    this.element.scale.set( data.scale, data.scale, data.scale )
+    this.element.quaternion.set( data.rotation.x, data.rotation.y, data.rotation.z, data.rotation.w )
+  }
 
   focus () {
     this.#element.material.color.set( this.colorFocus )

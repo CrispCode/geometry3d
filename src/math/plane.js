@@ -1,8 +1,8 @@
 'use strict'
 
-import Vector from './vector.js'
+import { Vector } from './vector.js'
 
-export default function Plane ( plane ) {
+export function Plane ( plane ) {
   const original = Plane.isValid( plane ) ? plane : Plane.create()
 
   return {

@@ -1,8 +1,8 @@
 'use strict'
 
-import approx from './../utils/approx.js'
+import { approx } from './../utils/approx.js'
 
-export default function Vector ( vector ) {
+export function Vector ( vector ) {
   const original = Vector.isValid( vector ) ? vector : Vector.create()
 
   return {

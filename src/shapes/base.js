@@ -1,10 +1,10 @@
 'use strict'
 
-import uid from './../utils/uid.js'
-import Vector from './../math/vector.js'
-import Quaternion from './../math/quaternion.js'
+import { uid } from './../utils/uid.js'
+import { Vector } from './../math/vector.js'
+import { Quaternion } from './../math/quaternion.js'
 
-export default class Base {
+export class Base {
   #id = uid()
   get id () {
     return this.#id

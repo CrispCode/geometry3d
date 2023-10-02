@@ -1,8 +1,8 @@
 'use strict'
 
-import Polyhedron from './polyhedron.js'
+import { Polyhedron } from './polyhedron.js'
 
-export default class Box extends Polyhedron {
+export class Box extends Polyhedron {
   constructor ( width = 1, height = 1, depth = 1 ) {
     const halfW = width / 2
     const halfH = height / 2

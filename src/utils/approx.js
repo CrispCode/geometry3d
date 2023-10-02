@@ -1,5 +1,5 @@
 'use strict'
 
-export default ( num, decimals ) => {
+export const approx = ( num, decimals ) => {
   return parseFloat( parseFloat( num ).toFixed( decimals ) )
 }

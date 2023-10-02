@@ -1,8 +1,8 @@
 'use strict'
 
-import Vector from './../math/vector.js'
+import { Vector } from './../math/vector.js'
 
-export default class Grid {
+export class Grid {
   #cellSize = null
   get size () {
     return this.#cellSize

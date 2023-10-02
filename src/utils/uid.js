@@ -2,7 +2,7 @@
 
 let cache = 0
 
-export default () => {
+export const uid = () => {
   cache++
   return cache
 }

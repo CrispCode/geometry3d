@@ -1,9 +1,9 @@
 'use strict'
 
-import approx from './../utils/approx.js'
-import Vector from './vector.js'
+import { approx } from './../utils/approx.js'
+import { Vector } from './vector.js'
 
-export default function Quaternion ( quaternion ) {
+export function Quaternion ( quaternion ) {
   const original = Quaternion.isValid( quaternion ) ? quaternion : Quaternion.create()
 
   return {

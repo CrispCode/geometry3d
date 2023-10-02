@@ -1,9 +1,9 @@
 'use strict'
 
-import Vector from './vector.js'
-import Plane from './plane.js'
+import { Vector } from './vector.js'
+import { Plane } from './plane.js'
 
-export default function Triangle ( triangle ) {
+export function Triangle ( triangle ) {
   const original = Triangle.isValid( triangle ) ? triangle : Triangle.create()
 
   return {
