@@ -19,8 +19,8 @@
   ],
   "access": "public",
   "engines": {
-    "node": ">=16.15.0",
-    "npm": ">=8.5.5"
+    "node": ">=20.9.0",
+    "npm": ">=10.1.0"
   },
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -31,14 +31,12 @@
     "url": "https://github.com/CrispCode/geometry3d/issues"
   },
   "devDependencies": {
-    "c8": "^8.0.1",
-    "eslint": "^8.46.0",
-    "mocha": "^10.2.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "eslint": "^8.55.0",
+    "cli-progress": "^3.12.0"
   },
   "scripts": {
-    "test": "c8 mocha --recursive -R progress -b",
+    "performance": "node ./performance/index.js",
+    "test": "node --test tests/**/*.test.js",
     "start": "npx webpack serve --open --static ./playground"
   },
   "type": "module",

@@ -1,25 +1,12 @@
 'use strict'
 
-import { Grid } from './collision/grid.js'
+export { Grid } from './collision/grid.js'
 
-import { Plane } from './math/plane.js'
-import { Quaternion } from './math/quaternion.js'
-import { Triangle } from './math/triangle.js'
-import { Vector } from './math/vector.js'
+export { Plane } from './math/plane.js'
+export { Quaternion } from './math/quaternion.js'
+export { Triangle } from './math/triangle.js'
+export { Vector } from './math/vector.js'
 
-import { Box } from './shapes/box.js'
-import { Polyhedron } from './shapes/polyhedron.js'
-import { Sphere } from './shapes/sphere.js'
-
-export {
-  Grid,
-
-  Plane,
-  Quaternion,
-  Triangle,
-  Vector,
-
-  Box,
-  Polyhedron,
-  Sphere
-}
+export { Box } from './shapes/box.js'
+export { Polyhedron } from './shapes/polyhedron.js'
+export { Sphere } from './shapes/sphere.js'

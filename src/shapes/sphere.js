@@ -1,35 +1,45 @@
 'use strict'
 
-import { Base } from './base.js'
+import { Shape } from './shape.js'
 
 import { Vector } from './../../src/math/vector.js'
 
-export class Sphere extends Base {
+export class Sphere extends Shape {
   #radius = 1
+  set radius ( value ) {
+    if ( !( typeof value === 'number' && !Number.isNaN( value ) ) ) {
+      throw new Error( 'Radius needs to be a Number' )
+    }
+    this.#radius = value
+    this.#worldRadius = value * this.scale
+    this.#updateBoundingBox()
+  }
+  get radius () {
+    return this.#radius
+  }
 
-  radius = 1
+  #worldRadius = 1
+  get worldRadius () {
+    return this.#worldRadius
+  }
+
+  #updateBoundingBox () {
+    Vector( this.boundsMin ).copy( Vector.create( -1 * this.radius * this.scale, -1 * this.radius * this.scale, -1 * this.radius * this.scale ) )
+    Vector( this.boundsMax ).copy( Vector.create( 1 * this.radius * this.scale, 1 * this.radius * this.scale, 1 * this.radius * this.scale ) )
+  }
+
+  set scale ( value ) {
+    super.scale = value
+    this.#worldRadius = this.#radius * value
+    this.#updateBoundingBox()
+  }
+  get scale () {
+    return super.scale
+  }
 
   constructor ( radius = 1 ) {
     super()
 
-    this.#radius = radius
     this.radius = radius
-
-    // Compute bounding box
-    Vector( this.bounds.min ).copy( Vector.create( -1 * radius, -1 * radius, -1 * radius ) )
-    Vector( this.bounds.max ).copy( Vector.create( 1 * radius, 1 * radius, 1 * radius ) )
-  }
-
-  update () {
-    if ( this.needsUpdate ) {
-      const radius = this.#radius * this.scale
-      this.radius = radius
-
-      // Compute bounding box
-      Vector( this.bounds.min ).copy( Vector.create( -1 * radius, -1 * radius, -1 * radius ) )
-      Vector( this.bounds.max ).copy( Vector.create( 1 * radius, 1 * radius, 1 * radius ) )
-    }
-
-    super.update()
   }
 }

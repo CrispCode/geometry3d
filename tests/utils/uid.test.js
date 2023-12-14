@@ -1,15 +1,16 @@
-/* globals describe, it */
+'use strict'
 
-import assert from 'assert'
-import uid from './../../src/utils/uid.js'
+import { describe, it } from 'node:test'
+import assert from 'node:assert'
+
+import { uid } from './../../src/utils/uid.js'
 
 describe( 'utils.uid', () => {
-  it( 'should return a unique identifier', ( next ) => {
+  it( 'should return a unique identifier', () => {
     assert.ok( typeof uid() === 'number' )
-    next()
   } )
 
-  it( 'should return a unique identifier even if the calls happen really fast', ( next ) => {
+  it( 'should return a unique identifier even if the calls happen really fast', () => {
     const ids = []
     const uids = new Set()
     for ( let i = 0; i < 10; i++ ) {
@@ -18,6 +19,5 @@ describe( 'utils.uid', () => {
       uids.add( id )
     }
     assert.ok( ids.length === uids.size )
-    next()
   } )
 } )
