@@ -32,8 +32,8 @@ export class Grid {
   }
 
   add ( shape ) {
-    const boundsMin = Vector( shape.bounds.min ).clone().add( shape.position ).toObject()
-    const boundsMax = Vector( shape.bounds.max ).clone().add( shape.position ).toObject()
+    const boundsMin = Vector( shape.boundsMin ).clone().add( shape.position ).toObject()
+    const boundsMax = Vector( shape.boundsMax ).clone().add( shape.position ).toObject()
 
     for ( let fromX = this.#getCellValueFromCoordonate( boundsMin.x ), toX = this.#getCellValueFromCoordonate( boundsMax.x ), i = fromX; i <= toX; i++ ) {
       for ( let fromY = this.#getCellValueFromCoordonate( boundsMin.y ), toY = this.#getCellValueFromCoordonate( boundsMax.y ), j = fromY; j <= toY; j++ ) {
@@ -52,8 +52,8 @@ export class Grid {
   }
 
   remove ( shape ) {
-    const boundsMin = Vector( shape.bounds.min ).clone().add( shape.position ).toObject()
-    const boundsMax = Vector( shape.bounds.max ).clone().add( shape.position ).toObject()
+    const boundsMin = Vector( shape.boundsMin ).clone().add( shape.position ).toObject()
+    const boundsMax = Vector( shape.boundsMax ).clone().add( shape.position ).toObject()
     this.applyToCellsInArea( boundsMin.x, boundsMax.x, boundsMin.y, boundsMax.y, boundsMin.z, boundsMax.z, ( cell ) => {
       cell.children.delete( shape.id )
       if ( cell.children.size === 0 ) {
@@ -68,8 +68,8 @@ export class Grid {
   }
 
   applyToCellsOfShape ( shape, callback ) {
-    const boundsMin = Vector( shape.bounds.min ).clone().add( shape.position ).toObject()
-    const boundsMax = Vector( shape.bounds.max ).clone().add( shape.position ).toObject()
+    const boundsMin = Vector( shape.boundsMin ).clone().add( shape.position ).toObject()
+    const boundsMax = Vector( shape.boundsMax ).clone().add( shape.position ).toObject()
     this.applyToCellsInArea( boundsMin.x, boundsMax.x, boundsMin.y, boundsMax.y, boundsMin.z, boundsMax.z, callback )
   }
 

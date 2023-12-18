@@ -3,10 +3,10 @@
 export class Collisions {
   // Uses AABB detection in 3 dimensions
   static checkBoundsCollision ( shape1, shape2 ) {
-    const s1min = shape1.bounds.min
-    const s2min = shape2.bounds.min
-    const s1max = shape1.bounds.max
-    const s2max = shape2.bounds.max
+    const s1min = shape1.boundsMin
+    const s2min = shape2.boundsMin
+    const s1max = shape1.boundsMax
+    const s2max = shape2.boundsMax
 
     const collided = (
       s1min.x <= s2max.x &&

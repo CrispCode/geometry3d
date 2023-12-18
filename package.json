@@ -31,8 +31,9 @@
     "url": "https://github.com/CrispCode/geometry3d/issues"
   },
   "devDependencies": {
-    "eslint": "^8.55.0",
-    "cli-progress": "^3.12.0"
+    "asciichart": "^1.5.25",
+    "cli-progress": "^3.12.0",
+    "eslint": "^8.55.0"
   },
   "scripts": {
     "performance": "node ./performance/index.js",
